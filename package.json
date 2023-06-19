@@ -1,0 +1,40 @@
+{
+    "name": "Golf Card Game",
+    "version": "3.0.0",
+    "description": "Golf card game for web play",
+    "main": "main.js",
+    "scripts": {
+        "start": "vite",
+        "build": "vite build --emptyOutDir",
+        "preview": "vite preview",
+        "lint": "eslint *.js src/**/*.js",
+        "format": "prettier --ignore-path ./.gitignore --write \"./**/*.{html,json,js,ts,css}\"",
+        "test": "jest"
+    },
+    "author": "Emily Lemmon",
+    "license": "",
+    "devDependencies": {
+        "eslint": "^8.26.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "jest": "^29.2.2",
+        "prettier": "^2.7.1",
+        "vite": "^4.1.4"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env"
+        ]
+    },
+    "browserslist": [
+        "last 3 and_chr versions",
+        "last 3 chrome versions",
+        "last 3 opera versions",
+        "last 3 ios_saf versions",
+        "last 3 safari versions"
+    ],
+    "dependencies": {
+        "jwt-decode": "^3.1.2",
+        "sass": "^1.63.4"
+    }
+}
