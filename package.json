@@ -1,5 +1,5 @@
 {
-    "name": "Golf Card Game",
+    "name": "golf_card_game",
     "version": "3.0.0",
     "description": "Golf card game for web play",
     "main": "main.js",
