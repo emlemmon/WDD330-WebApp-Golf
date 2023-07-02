@@ -1,3 +1,1 @@
-export function initHowToPlay() {
-    
-}
+export function initHowToPlay() {}
