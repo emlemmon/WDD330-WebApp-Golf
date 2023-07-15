@@ -1,3 +1,6 @@
+
+import { getLocalStorage } from "./utils.mjs";
+
 export class Card {
   data;
   element;
@@ -7,32 +10,56 @@ export class Card {
   constructor(data){
     this.data = data;
     this.element = document.createElement("div");
-    this.element.className = "card front";
-    this.element.innerHTML = `<img src="${data.image}">${cardBack1}`;
+    this.element.className = "card back";
+    let isPink = getLocalStorage("isPink");
+    if (isPink === null) {
+      isPink = true;
+    }
+    if (isPink) {
+      this.element.innerHTML = `<img src="${data.image}">${cardBack1}`;
+    } else {
+      this.element.innerHTML = `<img src="${data.image}">${cardBack2}`;
+    }
     this.value = this.findValue(data);
     this.canBeSeen = true;
   }
 
-  flip() {
+  flip(animate) {
+    if (animate) {
+       this.element.classList.add("animate");
+    } else {
+      this.element.classList.remove("animate");
+    }
+   
     this.element.classList.toggle("back");
     this.element.classList.toggle("front")
   }
 
   findValue() {
     const valueString = this.data.value;
+    const codeString = this.data.code;
+    const radioBtns = document.querySelectorAll("input[name='scoringChoice']");
+    
     if (valueString === "KING") {
       return 0;
     } else if (valueString === "ACE") {
       return 1;
-    }
+    } else if (valueString === "JACK") {
+      if (i.checked && i.value === "standard") {
+        return 10;
+      } else if (i.checked && i.value === "wilds" && codeString === "JH") {
+        return -2;
+      } 
+    } 
+    
     let cardValue = parseInt(valueString);
     if (isNaN(cardValue)) {
       cardValue = 10;
     }
-    return cardValue;
+    return cardValue; 
   }
-}
 
+}
 
 export const cardBack1 = `<svg class="first cardBack" height=322 width=229 viewBox="0,0,229,320">
 <rect id="card1" x="0" height="320" width="228.57" y="0" rx="10" ry="10"/>
@@ -61,7 +88,7 @@ export const cardBack1 = `<svg class="first cardBack" height=322 width=229 viewB
 <circle id="circle1" class="circle" cx="114" cy="160" r="45" fill="url(#gradient)"/>
 </svg>`
 
-export const cardBack2 = `<svg class="second cardback" height=322 width=229 viewBox="0,0,229,320">
+export const cardBack2 = `<svg class="second cardBack" height=322 width=229 viewBox="0,0,229,320">
   <rect id="card2" x="0" height="320" width="228.57" y="0" rx="10" ry="10"/>
   <defs>
     <linearGradient id="gradient3" class="middleCircle2">

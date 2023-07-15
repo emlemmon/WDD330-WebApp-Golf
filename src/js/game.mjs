@@ -1,9 +1,6 @@
 import { Card, cardBack1, cardBack2 } from "./card.mjs";
 import { drawCards } from "./deckService.mjs";
-import { loadPartial } from "./utils.mjs";
-import { initScores } from "./highScores.js";
-import { initNew4Card } from "./new4Card.js";
-import { initNew9Card } from "./new9Card.js";
+import { getLocalStorage, loadPartial, setLocalStorage, formDataToJSON } from "./utils.mjs";
 
 export class Game {
     deckId;
@@ -19,27 +16,67 @@ export class Game {
     turnsRemaining;
     gameOver;
 
-    constructor(deckId, cardsPerPlayer) {
+    constructor(deckId, cardsPerPlayer, playerCards, computerCards, discardPile) {
         this.deckId = deckId;
         this.cardsPerPlayer = cardsPerPlayer;
         this.playerCards = [];
         this.computerCards = [];
+
+        if (playerCards) {
+            this.playerCards = playerCards.map((card) => new Card(card));
+        }
+        if (computerCards) {
+            this.computerCards = computerCards.map((card) => new Card(card));
+        }
+        if (discardPile) {
+            this.discardPile = new Card(discardPile);
+        }
         this.initCards();
 
         this.playersTurn = true;
         this.knocked = false;
         this.gameOver = false;
+
+        window.addEventListener('beforeunload', () => {
+            if (this.gameOver) {
+                return;
+            } else {
+                let currentGame = {
+                deckId: this.deckId,
+                cardsPerPlayer: this.cardsPerPlayer,
+                playerCards: this.playerCards.map((card) => card.data),
+                computerCards: this.computerCards.map((card) => card.data),
+                discardPile: this.discardPile.data
+                };
+                setLocalStorage("savedGame", currentGame);
+            }
+        });
     }
 
     async initCards() {
-        const dealCards = await drawCards(this.deckId, this.cardsPerPlayer*2);
-        for (let i = 0; i < this.cardsPerPlayer; i++) {
-            this.playerCards.push(new Card(dealCards[i*2]));
-            this.computerCards.push(new Card(dealCards[(i*2)+1]))
+        if (this.playerCards.length == 0) {
+            const dealCards = await drawCards(this.deckId, this.cardsPerPlayer*2);
+            for (let i = 0; i < this.cardsPerPlayer; i++) {
+                this.playerCards.push(new Card(dealCards[i*2]));
+                this.computerCards.push(new Card(dealCards[(i*2)+1]))
+            }
+            //populate discard pile
+            this.newCardData = await drawCards(this.deckId, 1); //remember that newCardData is an array
+            this.discardPile = new Card(this.newCardData[0]);    
         }
+        const discardPileEl = document.querySelector(".discardPile");
+        discardPileEl.appendChild(this.discardPile.element);
+        this.discardPile.flip();
 
         //populate player and computer cards
         this.addCardsToDom(this.playerCards, document.querySelectorAll(".playerGridItem"));
+        if (this.cardsPerPlayer === 4) {
+            this.playerCards[2].flip(true);
+            this.playerCards[3].flip(true);
+            setTimeout(() => {
+                this.playerCards[2].flip(false);
+                this.playerCards[3].flip(false);} , 3000);
+        }
         this.addCardsToDom(this.computerCards, document.querySelectorAll(".computerGridItem"));
 
         if (this.computerCards.length === 4) {
@@ -56,14 +93,15 @@ export class Game {
 
         //populate draw pile
         this.drawPile = document.querySelector(".drawPile");
-        this.drawPile.innerHTML = `${cardBack1}`;
-
-        //populate discard pile
-        this.newCardData = await drawCards(this.deckId, 1); //remember that newCardData is an array
-        this.discardPile = new Card(this.newCardData[0]);
-        const discardPileEl = document.querySelector(".discardPile");
-        discardPileEl.appendChild(this.discardPile.element);
-        //this.discardPile.flip();
+        let isPink = getLocalStorage("isPink");
+        if (isPink === null) {
+            isPink = true;
+          }
+          if (isPink) {
+            this.drawPile.innerHTML = `${cardBack1}`;
+          } else {
+            this.drawPile.innerHTML = `${cardBack2}`;
+          }
 
         //listen for onclicks
         this.drawPile.addEventListener("click", () => this.onClickDeck());
@@ -79,6 +117,7 @@ export class Game {
         for (let i = 0; i < this.cardsPerPlayer; i++) {
             elementArray[i].appendChild(cardArray[i].element);
             }; 
+        
     }
 
     async onClickDeck() {
@@ -90,7 +129,7 @@ export class Game {
         this.newCardData = await drawCards(this.deckId, 1);
         this.drawnCard = new Card(this.newCardData[0]);
         this.drawPile.appendChild(this.drawnCard.element);
-        //this.drawnCard.flip();
+        this.drawnCard.flip(true);
         this.selectedCard = this.drawnCard;
     }
 
@@ -108,6 +147,12 @@ export class Game {
         cardArray[index] = this.selectedCard;
         this.selectedCard.canBeSeen = true;
         this.selectedCard = undefined; 
+        if (cardArray[index].element.classList.contains("front")) {
+            cardArray[index].flip();
+        } 
+        if (this.discardPile.element.classList.contains("back")) {
+            this.discardPile.flip(true);
+        }
     }
 
     onClickPlayerCard(cardClicked) {
@@ -182,6 +227,7 @@ export class Game {
                 this.selectedCard.element,
                 this.discardPile.element);
                 this.discardPile = this.selectedCard;
+                this.discardPile.flip(true);
                 this.selectedCard = undefined} , 250);
             }
         }
@@ -240,22 +286,33 @@ export class Game {
     }
     onComplete() {
         this.gameOver = true;
-        console.log("game is over, no one should be able to do any more turns");
+        //console.log("game is over, no one should be able to do any more turns");
+        for (let i = 0; i < this.cardsPerPlayer; i++) {
+            setTimeout(() => {
+                this.playerCards[i].flip(true);
+                this.computerCards[i].flip(true);
+            } , ((i+1)*2)*200);
+        }
 
         const playerScore = this.getScore(this.playerCards);
         const computerScore = this.getScore(this.computerCards);
         console.log(playerScore, computerScore);
 
-        if (playerScore < computerScore) {  
-            document.querySelector("#saveScoreForm").style.display = 'block';
-            this.gameOverMessage("You won!");
+        setTimeout(() => {
+            if (playerScore < computerScore) {  
+                document.querySelector("#saveScoreForm").style.display = 'block';
+                this.gameOverMessage("You won!", playerScore, computerScore);
+                const saveScores = document.querySelector("#scoreForm");
+                saveScores.addEventListener("submit", () => 
+                    this.checkAndSubmitForm(scoreForm, playerScore, computerScore));    
 
-        } else if (computerScore < playerScore) {
-            this.gameOverMessage("You lost!");
-            
-        } else {
-            this.gameOverMessage("It's a tie!");
-        }
+            } else if (computerScore < playerScore) {
+                this.gameOverMessage("You lost!", playerScore, computerScore);
+                
+            } else {
+                this.gameOverMessage("It's a tie!", playerScore, computerScore);
+            }
+        } , 2400);
     }
 
     getScore(cardArray) {
@@ -264,14 +321,15 @@ export class Game {
         return sumOfValues;
     }
 
-    gameOverMessage(message) {
+    gameOverMessage(message, score1, score2) {
         const closePopup = document.getElementById("popupclose");
         const choices = document.querySelector(".choices");
 
         overlay.style.display = 'block';
         popup.style.display = 'block';
         choices.style.display = 'block';
-        document.querySelector(".winMessage").innerHTML = message;            
+        document.querySelector(".winMessage").innerHTML = message;
+        document.querySelector(".scoreMessage").innerHTML = `${score1}  --  ${score2}`;
         closePopup.onclick = function() {
             overlay.style.display = 'none';
             popup.style.display = 'none';
@@ -279,13 +337,35 @@ export class Game {
 
         document
             .querySelector(".scoresPg2")
-            .addEventListener("click", () => loadPartial("scores", initScores));
+            .addEventListener("click", () => loadPartial("scores"));
         document
             .querySelector(".new4CardPg")
-            .addEventListener("click", () => loadPartial("new4Card", initNew4Card));
+            .addEventListener("click", () => loadPartial("new4Card"));
         document
             .querySelector(".new9CardPg")
-            .addEventListener("click", () => loadPartial("new9Card", initNew9Card));
+            .addEventListener("click", () => loadPartial("new9Card"));
     }
-    
+
+    checkAndSubmitForm(form, score1, score2) {
+
+            let myForm = form;
+            let chkStatus = myForm.checkValidity();
+            myForm.reportValidity();
+            if (!chkStatus) {
+                throw error;
+            } else {
+                const formData = formDataToJSON(form);
+                let savedScores = getLocalStorage("Scores");
+                if (!savedScores) {
+                    savedScores = [];
+                }
+                formData.playerScore = score1;
+                formData.computerScore = score2;
+                savedScores.push(formData);
+                console.log(savedScores);
+                setLocalStorage("Scores", savedScores);
+                document.querySelector("#saveScoreForm").style.display = 'none';
+          }
+
+    }
 }

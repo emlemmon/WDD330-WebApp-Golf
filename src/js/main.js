@@ -1,23 +1,23 @@
-import { loadPartial, toggleNav } from "./utils.mjs";
-import { initHowToPlay } from "./howToPlay";
-import { initPlayGolf } from "./playGolf";
-import { initScores } from "./highScores";
-import { initSettings } from "./settings";
-import { initNew4Card } from "./new4Card";
+import { initializeApp, loadPartial, toggleNav } from "./utils.mjs";
 
-loadPartial("new4Card", initNew4Card);
+initializeApp();
 document.querySelector("#menu-icon").addEventListener("click", toggleNav);
 document.querySelector(".menu-close").addEventListener("click", toggleNav);
 
 document
   .querySelector(".playGolfPg")
-  .addEventListener("click", () => loadPartial("playGolf", initPlayGolf));
+  .addEventListener("click", () => loadPartial("playGolf"));
 document
   .querySelector(".scoresPg")
-  .addEventListener("click", () => loadPartial("scores", initScores));
+  .addEventListener("click", () => loadPartial("scores"));
 document
   .querySelector(".howToPlayPg")
-  .addEventListener("click", () => loadPartial("howToPlay", initHowToPlay));
+  .addEventListener("click", () => loadPartial("howToPlay"));
 document
   .querySelector(".settingsPg")
-  .addEventListener("click", () => loadPartial("settings", initSettings));
+  .addEventListener("click", () => loadPartial("settings"));
+
+window.onpopstate = function (event) {
+  loadPartial(event.state.selectedPartial, false);
+  console.log("popping" + event.state.selectedPartial);
+};

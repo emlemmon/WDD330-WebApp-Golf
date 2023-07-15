@@ -7,132 +7,230 @@ $PaleBlue: #AFFCFF;
 $Blue: #6CD4FF;
 $Indigo: #003A52;
 
+$none: 0px;
+$small: 3px;
+
 //every page
 body {
     background-color: $PaleBlue;
     margin: 0;
+    position: relative;
+    min-height: 100vh;
+}
+
+.contentWrap {
+    padding-bottom: 2.5em;    /* Footer height */
 }
 
 header {
     background-color: $Lavender;
-    //margin: 1em auto;
+    display: flex;
+    justify-content: space-between;
+}
+.logo {
+    display: inline-block;
+    max-width: 3.6em;
+    max-height: 73px;
+    font-size: 64px;
+    font-weight: 900;
+    padding: .06em .25em .04em .22em;
+    margin: 8px;
+    cursor: pointer;
+    border: 3px solid $Indigo;
+    border-radius: 50%;
+    background-color: $LightPink;
+    color: $Indigo;
 }
 header h1 {
-    display: inline;
+    display: inline-block;
+    text-align: right;
+    flex: 1 1 auto;
+    border: 3px solid $Indigo;
+    border-radius: 13px;
+    background-color: $LightPink;
+    color: $Indigo;
+    margin: 20px 8px;
+    margin-left: auto;
+    padding: .2em .3em ;
+    max-width: fit-content;
+    align-self: center;
+    
 }
-header img {
-    max-width: 3.6em;
-    margin: 0 auto;
-    padding: .5em;
-}
-footer {
-    background-color: $Lavender;
-}
-footer img {
-    max-width: 1em;
-    margin: 0 auto;
-    padding: .2em;
-}
-footer h4 {
-    display: inline;
-}
-//home page
-$none: 0px;
-$small: 3px;
 
 #menu {
-  background-color: $Indigo;
-  position: absolute;
-  top: $none;
-  left: -210px;
-  min-height: 100%;
-  width: 210px;
-  padding: $none;
-  transition: all .4s ease-out;
+    background-color: $Indigo;
+    opacity: .95;
+    position: absolute;
+    top: $none;
+    left: -210px;
+    min-height: 100%;
+    width: 160px;
+    padding: $none;
+    transition: all .4s ease-out;
+    z-index: 300;
 }
 
 #menu.menu-open {
-  left: $none;
+    left: $none;
 }
-ul li {
-  color: $LightPink;
-  font-size: 20px;
-  list-style: none;
-  padding: 1rem;
-  margin-left: 1.5rem;
-  size: 20px;
+
+header ul li {
+    color: $LightPink;
+    font-size: 22px;
+    list-style: none;
+    padding: .2em;
+    margin-left: -1em;
+    margin-top: 20px;
+    cursor: pointer;
+}
+header ul li:hover {
+    transform: scale(1.05);
+    transition: .15s;
 }
 
 .menu-span {
     visibility: hidden;
 }
 
-.menu-icon.open {
-  border-top: $none;
-}
 .open.menu-icon span {
     display: inline;
     border: $PaleBlue;
     color: $PaleBlue;
 }
-
-ul li:hover {
-  color: black;
+footer {
+    display:flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.2em;
+    background-color: $Lavender;
 }
-
-.choices ul li {
-    color:#003952;
-}
-//login page
-form {
-    margin: 0 auto;
-    padding: .7em;
-    border: 2px solid $Indigo;
-    border-radius: 1em;
-    width: 300px;
-}
-
-form input {
-    margin-top: .7em;
-    width:auto;
-}
-
-input {
-    font: 1em sans-serif;
-    width: 230px;
-    box-sizing: border-box;
-    border: 1px solid $Indigo;
-    border-radius: .3em;
-}
-label {
+.footer-logo {
     display: inline-block;
-    width: 90px;
-    text-align: right;
-}
- 
-button {
-    margin: 1.2em;
-    background-color: #dbafd4;
-    width: fit-content;
-    height: 2em;
-    font: 1em sans-serif;
+    position: absolute;
+    bottom: 0;
+    font-size: 15px;
+    font-weight: 900;
+    padding: 2px 5px;
+    
     border: 2px solid $Indigo;
-    border-radius: .3em;
+    border-radius: 50%;
+    background-color: $LightPink;
+    color: $Indigo;
+
+    margin: 2px 2px 4px 4px;
 }
-
-
+footer h4 {
+    display: inline-block;
+    position: absolute;
+    color: $Indigo;
+    margin: 10px 0px 0px 35px;
+}
 
 //scores page
+.scores p {
+    font-size: 18px;
+    margin: 0 1em;
+    margin-inline-start: 1em;
+}
 
 //how to play page
 
+h2 {
+    display: block;
+    padding: 1em;
+    margin: 10px auto;
+    font-size: 35px;
+    text-align: center;
+}
+
+.basicPg p {
+    margin: 0 1em;
+    margin-inline-start: 1em;
+}
+
+.new4CardPg2 {
+    color: $Indigo;
+    background-color: $LightPink;
+    font-size: 23px;
+    padding: 14px; 
+    text-align: center;
+    display: block;
+    border:4px solid $Indigo;
+    border-radius: .6em;
+    margin: 25px 100px;
+    cursor: pointer;
+}
+
+.basicPg ul {
+    margin-right: 10px;
+}
+
 //settings page
+
+.settingsRadio {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.settingsRadio h3 {
+    margin: 30px 20px 10px 30px;
+    font-size: 26px;
+    text-decoration: underline;
+    
+}
+
+.radioInput {
+    display: none;
+}
+.radioInput:checked + .cardOption, .radioInput:checked + .scoringOption {
+    box-shadow: 1px 1px 2px 2px $Purple;
+} 
+
+.cardColors, .scoringOpt {
+    margin: auto 0px;
+}
+.cardOption, .scoringOption {
+    display: inline-block;
+    margin: 10px 20px;
+    padding: 10px;
+    min-height: 3em;
+    min-width: 5em;
+    background-color: $LightPink ;
+    border: 2px solid $Indigo;
+    border-radius: 6px;
+}
+
+.cardOption:hover, .scoringOption:hover {
+    cursor: pointer;
+}
+
+.cardOption label, .scoringOption label {
+    width: 100%;
+    margin: auto ;
+}
 
 //new 9 card page
 
-//new 4 card page
+//play golf page
+.playGolfButtons {
+    padding-left: 0;
+}
+.playGolfButtons li {
+    color: $Indigo;
+    background-color: $LightPink;
+    font-size: 25px;
+    list-style: none;
+    padding: 20px; 
+    text-align: center;
+    display: block;
+    border: 4px solid $Indigo;
+    border-radius: .6em;
+    margin: 30px auto;
+    max-width: 260px;
+    cursor: pointer;
+}
 
-//current game page, play golf page
+//new 4 card page and previous game page 
 
 .gameLayout {
     display: grid;
@@ -140,6 +238,7 @@ button {
     gap: 1em;
     margin: 0 auto;
     align-items: center;
+    max-width: 800px;
 }
 .card-container-4 {
     display: grid;
@@ -154,7 +253,7 @@ button {
 .card img, .card svg {
     width: 100%;
 }
-.card>.cardBack {
+.card > .cardBack {
     position: absolute;
     left: 0;
     top:0;
@@ -175,6 +274,7 @@ button {
 .drawPile svg, .drawPile div {
     grid-row: 1;
     grid-column: 1;
+    height:fit-content
 }
 .drawPile div {
     align-self: center;
@@ -228,7 +328,7 @@ button {
         100% { opacity: 0;}
     }  
 
-.card.front {
+.card.animate.front {
 	animation: cardFlip 0.5s ease-in-out 0s normal both;
 }
 .card.front > .cardBack {
@@ -237,7 +337,7 @@ button {
 .card.back {
 	animation: cardFlip2 0.5s ease-in-out 0s reverse both;
 }
-.card.back > .cardBack {
+.card.animate.back > .cardBack {
     animation: cardFlipCardBack2 0.5s ease-in-out 0s reverse both;
 }
 
@@ -275,14 +375,93 @@ button {
     padding: 10px;
     cursor: pointer;
 }
-
+.winMessage {
+    display: block;
+    padding: .5em;
+    margin: 7px auto;
+    font-size: 43px;
+    text-align: center; 
+}
+.scoreMessage {
+    display: block;
+    padding: .3em;
+    margin: 4px auto;
+    font-size: 20px;
+    text-align: center;
+}
 .choices {
+    margin: 0 auto;
     display: none;
     color: $Indigo;
+    text-align: center;
+}
+
+.choices ul {
+    padding-inline-start: 0px;
+}
+
+.choices ul li {
+    display: inline-block;
+    color: $Indigo;
+    font-size: 22px;
+    width: fit-content;
+    height: fit-content;
+    list-style: none;
+    padding: .4em .4em;
+    cursor: pointer;
+    margin: .6em;
+    background-color: $Lavender;
+    border: 3px solid $Indigo;
+    border-radius: .3em;
+}
+.choices ul li:hover {
+    transform: scale(1.05);
+    transition: .25s;
 }
 
 #saveScoreForm {
     display: none;
+}
+
+form {
+    margin: 0 auto;
+    padding: .7em;
+    border: 2px solid $Indigo;
+    border-radius: 1em;
+    width: 300px;
+}
+
+form input {
+    margin-top: .7em;
+    width:auto;
+}
+
+input {
+    font: 1em sans-serif;
+    width: 20px;
+    box-sizing: border-box;
+    border: 1px solid $Indigo;
+    border-radius: .3em;
+}
+form label {
+    display: inline-block;
+    width: 90px;
+    text-align: right;
+}
+ 
+button {
+    margin: 1.2em;
+    background-color: $Lavender;
+    color: $Indigo;
+    width: fit-content;
+    height: 2em;
+    font: 1em sans-serif;
+    border: 2px solid $Indigo;
+    border-radius: .3em;
+    cursor: pointer;
+}
+.knockBtn {
+    margin-bottom: 0;
 }
 
 @keyframes enlarge {
