@@ -1,7 +1,7 @@
 import { loadPartial } from "./utils.mjs";
 
 export function initHowToPlay() {
-document
+  document
     .querySelector(".new4CardPg2")
     .addEventListener("click", () => loadPartial("new4Card"));
 }

@@ -6,16 +6,21 @@ export class Card {
   element;
   value;
   canBeSeen;
+  isPink = getLocalStorage("isPink");
+  isStandard = getLocalStorage("isStandard");
 
   constructor(data){
     this.data = data;
     this.element = document.createElement("div");
     this.element.className = "card back";
-    let isPink = getLocalStorage("isPink");
-    if (isPink === null) {
-      isPink = true;
+
+    if (this.isPink === null) {
+      this.isPink = true;
     }
-    if (isPink) {
+    if (this.isStandard === null) {
+      this.isStandard = true;
+    }
+    if (this.isPink) {
       this.element.innerHTML = `<img src="${data.image}">${cardBack1}`;
     } else {
       this.element.innerHTML = `<img src="${data.image}">${cardBack2}`;
@@ -38,18 +43,15 @@ export class Card {
   findValue() {
     const valueString = this.data.value;
     const codeString = this.data.code;
-    const radioBtns = document.querySelectorAll("input[name='scoringChoice']");
     
     if (valueString === "KING") {
       return 0;
     } else if (valueString === "ACE") {
       return 1;
-    } else if (valueString === "JACK") {
-      if (i.checked && i.value === "standard") {
+    } else if (valueString === "JACK" && this.isStandard) {
         return 10;
-      } else if (i.checked && i.value === "wilds" && codeString === "JH") {
-        return -2;
-      } 
+    } else if (valueString === "JACK" && codeString === "JH" && !this.isStandard) {
+      return -2;
     } 
     
     let cardValue = parseInt(valueString);

@@ -1,32 +1,45 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-import { cardBack1, cardBack2 } from "./card.mjs";
 
 export function initSettings() {
-  changeBacks();
-  document.querySelectorAll("input[name='backColor']").forEach((radioButton) => 
-  radioButton.addEventListener("change", onChange));
+  changeSetting("isPink", "pink", "blue");
+  changeSetting("isStandard", "standard", "wilds");
+
+  document
+    .querySelectorAll("input[name='backColor']")
+    .forEach((radioButton) =>
+      radioButton.addEventListener("change", () =>
+        onChange("backColor", "pink", "blue", "isPink")
+      )
+    );
+
+  document
+    .querySelectorAll("input[name='scoringChoice']")
+    .forEach((radioButton) =>
+      radioButton.addEventListener("change", () =>
+        onChange("scoringChoice", "standard", "wilds", "isStandard")
+      )
+    );
 }
 
-function changeBacks() {
-  let isPink = getLocalStorage("isPink");
-  if (isPink === null) {
-    isPink = true;
+function changeSetting(localStr, first, second) {
+  let setting = getLocalStorage(localStr);
+  if (setting === null) {
+    setting = true;
   }
-  if (isPink) {
-    document.getElementById("pink").checked = true;
+  if (setting) {
+    document.getElementById(first).checked = true;
   } else {
-    document.getElementById("blue").checked = true;
+    document.getElementById(second).checked = true;
   }
 }
 
-function onChange() {
-  const radioBtns = document.querySelectorAll("input[name='backColor']");
+function onChange(selection, first, second, localStr) {
+  const radioBtns = document.querySelectorAll(`input[name=${selection}]`);
   for (const i of radioBtns) {
-      if (i.checked && i.value === "pink") {
-        setLocalStorage("isPink", true);
-      } else if (i.checked && i.value === "blue") {
-        setLocalStorage("isPink", false);
-      }
+    if (i.checked && i.value === first) {
+      setLocalStorage(localStr, true);
+    } else if (i.checked && i.value === second) {
+      setLocalStorage(localStr, false);
+    }
   }
 }
-

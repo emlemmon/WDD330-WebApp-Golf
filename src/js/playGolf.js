@@ -11,4 +11,3 @@ export function initPlayGolf() {
     .querySelector(".loadPreviousPg")
     .addEventListener("click", () => loadPartial("loadPrevious"));
 }
-
