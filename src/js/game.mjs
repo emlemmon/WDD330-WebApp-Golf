@@ -341,9 +341,9 @@ export class Game {
         document
             .querySelector(".new4CardPg")
             .addEventListener("click", () => loadPartial("new4Card"));
-        document
-            .querySelector(".new9CardPg")
-            .addEventListener("click", () => loadPartial("new9Card"));
+        //document
+        //    .querySelector(".new9CardPg")
+        //    .addEventListener("click", () => loadPartial("new9Card"));
     }
 
     checkAndSubmitForm(form, score1, score2) {

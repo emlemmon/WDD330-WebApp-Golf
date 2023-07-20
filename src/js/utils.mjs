@@ -55,8 +55,8 @@ export async function loadPartial(selectedPartial, saveHistory = true) {
     initHowToPlay();
   } else if (selectedPartial === "new4Card") {
     initNew4Card();
-  }  else if (selectedPartial === "new9Card") {
-    initNew9Card();
+  // }  else if (selectedPartial === "new9Card") {
+  //   initNew9Card();
   }  else if (selectedPartial === "playGolf") {
     initPlayGolf();
   }  else if (selectedPartial === "scores") {
